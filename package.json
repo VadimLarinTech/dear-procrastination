@@ -1,0 +1,34 @@
+{
+  "name": "dear-procrastination",
+  "description": "A Rust todo-manager that lives in the NEAR blockchain.",
+  "version": "0.1.0",
+  "license": "(MIT AND Apache-2.0)",
+  "scripts": {
+    "build": "npm run build:rustup && npm run build:cpwasm",
+    "build:rustup": "rustup target add wasm32-unknown-unknown && cargo build --all --target wasm32-unknown-unknown --release",
+    "build:cpwasm": "mkdir -p out && rm -f ./out/main.wasm && cp ./target/wasm32-unknown-unknown/release/todo_manager.wasm ./out/main.wasm",
+    "deploy": "npm run build && near dev-deploy",
+    "start": "npm run deploy && echo The app is starting! && env-cmd -f ./neardev/dev-account.env parcel frontend/index.html --open",
+    "dev": "nodemon --watch -e ts --exec \"npm run start\"",
+    "test": "npm run build && npm run test:unit && npm run test:integration",
+    "test:unit": "cargo test",
+    "test:integration": "cd integration-tests && cargo run --example integration-tests"
+  },
+  "devDependencies": {
+    "env-cmd": "^10.1.0",
+    "near-cli": "^3.2.0",
+    "nodemon": "~2.0.15",
+    "parcel-bundler": "~1.12.5",
+    "near-workspaces": "^2.0.0",
+    "gh-pages": "~3.0.0",
+    "jest": "~25.2.0",
+    "jest-environment-node": "~26.0.1"
+  },
+  "dependencies": {
+    "near-api-js": "^0.44.2",
+    "regenerator-runtime": "^0.13.9"
+  },
+  "jest": {
+    "testEnvironment": "near-cli/test_environment"
+  }
+}

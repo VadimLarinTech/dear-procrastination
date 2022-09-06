@@ -1,0 +1,43 @@
+[package]
+name = "dear_procrastination"
+version = "0.1.0"
+authors = ["<vadimlarintech@gmail.com>"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+path = "src/lib.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+near-sdk = "4.0.0"
+near-contract-standards = "4.0.0"
+
+[dev-dependencies]
+near-sdk = "4.0.0"
+anyhow = "1.0"
+near-primitives = "0.5.0"
+near-units = "0.2.0"
+serde_json = "1.0"
+tokio = { version = "1.14", features = ["full"] }
+workspaces = "0.3.1"
+num-traits = "0.2"
+# remember to include a line for each contract
+
+[dependencies.num-traits]
+version = "0.2"
+default-features = false
+features = ["libm"]    # <--- Uncomment if you wish to use `Float` and `Real` without `std`
+
+[profile.release]
+codegen-units = 1
+# Tell 'rustc' to optimize for small code size.
+opt-level = "z"
+lto = true
+debug = false
+panic = "abort"
+overflow-checks = true
+
+[workspace]
+members = ["tests"]

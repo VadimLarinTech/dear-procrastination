@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEAR Web4 Online Hackathon</title>
+
+    <meta name="og:title" content="NEAR Web4 todo-manager 'Dear Procrastination'"/>
+    <meta name="og:description" content="NEAR Web4 todo-manager"/>
+
+    <link href="https://fonts.googleapis.com/css?family=Outfit:100,200,300,regular,500,600,700,800,900"
+          rel="stylesheet"/>
+
+    <style>
+        %
+        STYLESHEET
+
+        %
+    </style>
+    <script>
+        window.addEventListener("load", function () {
+            const form = document.getElementById("create_task");
+
+            form.addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                fetch("https://rest.nearapi.org/sign_url", {
+                    method: "POST",
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        account_id: document.getElementById("account_id").value,
+                        method: "create_task",
+                        params: {
+                            task: document.getElementById("task").value,
+                            guarantee_of_task_completion: Number(document.getElementById("guarantee_of_task_completion").value),
+                            deadline_time: new Date(document.getElementById("deadline_time").value).getTime(),
+                        },
+                        deposit: Number(document.getElementById("guarantee_of_task_completion").value),
+                        gas: "20000000000000",
+                        receiver_id: "%CONTRACT_ID%",
+                        meta: "",
+                        callback_url: "https://%CONTRACT_ID%.page",
+                        network: "%NETWORK%"
+                    })
+                })
+                    .then(resp => resp.text())
+                    .then(url => {
+                        console.log("Redirecting to: ", url);
+                        window.location.replace(url);
+                    });
+            });
+        });
+    </script>
+</head>
+
+<body>
+
+<div class="data">
+    <h2>NEAR Web4 todo-manager</h2>
+
+    <div style="text-align: initial">
+        <form id="create_task">
+            <p>
+                <label for="account_id">Your Account Id*:</label>
+                <input type="text" value="" id="account_id">
+            </p>
+            <p>
+                <label for="task">Task*:</label>
+                <input type="text" value="" id="task">
+            </p>
+
+            <p>
+                <label for="guarantee_of_task_completion">Guarantee of task completion*:</label>
+                <input type="text" value="" id="guarantee_of_task_completion">
+            </p>
+
+            <p>
+                <label for="deadline_time">Deadline time*:</label>
+                <input type="datetime-local" value="" id="deadline_time">
+            </p>
+
+            <input type="submit" style="padding:10px">
+        </form>
+    </div>
+</div>
+</body>
+</html>
